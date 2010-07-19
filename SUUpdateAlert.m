@@ -86,7 +86,16 @@
 		}
 		else
 		{
-			[[releaseNotesView mainFrame] loadRequest:[NSURLRequest requestWithURL:[updateItem releaseNotesURL] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30]];
+            NSString* version = [host version];
+            NSURL* releaseNotesURL = [updateItem releaseNotesURL];
+            NSString* joiner = @"?";
+            if ([releaseNotesURL query])
+                joiner = @"&";
+            releaseNotesURL = [NSURL
+                               URLWithString:[[releaseNotesURL absoluteString] 
+                                              stringByAppendingFormat:@"%@currentversion=%@",
+                                              joiner, version]];
+			[[releaseNotesView mainFrame] loadRequest:[NSURLRequest requestWithURL:releaseNotesURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30]];
 		}
 	}
 	else
